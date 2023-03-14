@@ -2,7 +2,7 @@ import javax.swing.JFrame;
 
 public class GameFrame extends JFrame{
     
-    public GameFrame(){
+    GameFrame(){
         this.add(new GamePanel());
         this.setTitle("Pong");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

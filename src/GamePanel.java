@@ -9,8 +9,10 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int SCREEN_HEIGHT = 600;
     static final int UNIT_SIZE = 25;
     static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / UNIT_SIZE;
+    static final int DELAY = 75;
 
     Random random;
+    Timer timer;
 
     public GamePanel(){
         random = new Random();
@@ -22,15 +24,21 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void startGame(){
-
+        ball();
+        timer = new Timer(DELAY, this);
+        timer.start();
     }
 
-    public void paintComponent(Graphics g){
-        super.paintComponent(g);
-        draw(g);
-    }
+    public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		draw(g);
+	}
 
     public void draw(Graphics g){
+        
+    }
+
+    public void ball(){
 
     }
 
@@ -46,7 +54,7 @@ public class GamePanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
-        
+    
     }
 
     public class MyKeyAdapter extends KeyAdapter {
