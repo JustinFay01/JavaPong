@@ -30,6 +30,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int ballY;
     int ballSpeed;
     char ballDirection = 'R';
+    int ballSign = BALL_SIZE/6;
 
     public GamePanel() {
         random = new Random();
@@ -112,13 +113,24 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void moveBall() {
-        switch (ballDirection) {
+        switch (ballDirection) { 
             case 'L':
                 ballX -= UNIT_SIZE;
+                ballY += ballSign;
                 break;
             case 'R':
                 ballX += UNIT_SIZE;
+                ballY += ballSign;
                 break;
+        }
+    }
+
+    
+    public void changeBallSign(){
+        int unit = BALL_SIZE/6;
+        int yDir = random.nextInt(2);
+        if(yDir == 1){
+            ballSign = -1*unit;
         }
     }
 
@@ -126,21 +138,22 @@ public class GamePanel extends JPanel implements ActionListener {
 
         // Case 5 hits leftPaddle
         for (int i = 0; i < PADDLE_HEIGHT; i++) {
-            if (ballX == leftBarY[i] || ballY == leftBarY[i]) {
+            if (ballX < 0) {
                 ballDirection = 'R';
+                changeBallSign();
             }
         }
         // Case 6 hits rightPaddle
         for (int i = 0; i < PADDLE_HEIGHT; i++) {
-            if (ballX == rightBarY[i] || ballY == rightBarY[i]) {
+            if (ballX > SCREEN_WIDTH) {
                 ballDirection = 'L';
+                changeBallSign();
+                
             }
         }
+       
 
         // Case 1 hits left wall
-        if (ballX < 0) {
-            // loop t
-        }
         // Case 2 hits right wall
 
         // Case 3 hits ceiling
