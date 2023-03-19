@@ -167,15 +167,6 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-    public int keepBallXInRange(int x) {
-        if (x < 0)
-            return -1; // Left wall
-        else if (x > SCREEN_WIDTH)
-            return SCREEN_WIDTH + 1; // right wall not working
-        else
-            return x;
-    }
-
     public void changeBallSign() {
         ballDiagnolDirection = 0;
         // Decide the angle of the bounce
@@ -287,7 +278,7 @@ public class GamePanel extends JPanel implements ActionListener {
                     move(rightBarY);
                     break;
             }
-            //repaint();
+            repaint();
         }
     }
 
