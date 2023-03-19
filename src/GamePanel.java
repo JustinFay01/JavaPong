@@ -99,16 +99,15 @@ public class GamePanel extends JPanel implements ActionListener {
 
             ///////////////////////////// Ball//////////////////////////////////////
             g.fillOval(ballX, ballY, BALL_SIZE, BALL_SIZE); /// Draw ball
-            
             ////////////////////////////// Score///////////////////////////////////
-            g.setFont(new Font("TimesRoman", Font.BOLD, 30));
-            ///////////////////////// p1/////////////////////
+            g.setFont(new Font("TimesRoman", Font.BOLD, 40));
             FontMetrics metrics = getFontMetrics(g.getFont());
-            g.drawString(String.valueOf(p1Score), (SCREEN_WIDTH - metrics.stringWidth(String.valueOf(p1Score) + UNIT_SIZE)) / 2,
+            ///////////////////////// p1/////////////////////
+            g.drawString(String.valueOf(p1Score), (SCREEN_WIDTH - metrics.stringWidth(String.valueOf(p1Score)) + 2*UNIT_SIZE) / 2,
                     g.getFont().getSize());
             ///////////////////////// p1//////////////////////
             ////////////////////////  p2//////////////////////
-            g.drawString(String.valueOf(p2Score), (SCREEN_WIDTH - metrics.stringWidth(String.valueOf(p2Score)) - UNIT_SIZE) / 2,
+            g.drawString(String.valueOf(p2Score), (SCREEN_WIDTH - metrics.stringWidth(String.valueOf(p2Score)) - 2*UNIT_SIZE) / 2,
                     g.getFont().getSize());
             ////////////////////////  p2//////////////////////
         }
@@ -223,13 +222,16 @@ public class GamePanel extends JPanel implements ActionListener {
             if (ballX <= 0) {
                 ballHorizontalDirection = 0;
                 resetPaddles();
+                p1Score++;
                 timeSleep(2);
                 newBall();
+                
             }
             // Case 2 hits right wall
             if (ballX >= SCREEN_WIDTH) {
                 ballHorizontalDirection = 0;
                 resetPaddles();
+                p2Score++;
                 timeSleep(2);
                 newBall();
             }
