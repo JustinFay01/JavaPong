@@ -18,7 +18,7 @@ public class GamePanel extends JPanel implements ActionListener {
     /////////////////////////////////////// paddles/////////////////////////////////////////
     private final int leftBarY[] = new int[GAME_UNITS]; // Left paddle
     private final int rightBarY[] = new int[GAME_UNITS]; // Right paddle
-    private static final int PADDLE_HEIGHT = 5;
+    private static final int PADDLE_HEIGHT = 4; //(actually 5)
     private char direction;
     /////////////////////////////////////// paddles/////////////////////////////////////////
 
@@ -82,11 +82,11 @@ public class GamePanel extends JPanel implements ActionListener {
 
             /////////////////////////////// Paddle//////////////////////////////////
             g.setColor(Color.white);
-            for (int i = 0; i < PADDLE_HEIGHT; i++) { /// Draw Left Paddle
+            for (int i = 0; i <= PADDLE_HEIGHT; i++) { /// Draw Left Paddle
                 g.fillRect(0, leftBarY[i], UNIT_SIZE, UNIT_SIZE);
             }
 
-            for (int i = 0; i < PADDLE_HEIGHT; i++) { // Draw right paddle
+            for (int i = 0; i <= PADDLE_HEIGHT; i++) { // Draw right paddle
                 g.fillRect(SCREEN_WIDTH - UNIT_SIZE, rightBarY[i], UNIT_SIZE, UNIT_SIZE);
             }
 
