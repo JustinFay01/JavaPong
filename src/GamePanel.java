@@ -34,6 +34,11 @@ public class GamePanel extends JPanel implements ActionListener {
     private int ballHorizontalDirection = UNIT_SIZE;
     ////////////////////////////////// Ball//////////////////////////////////
 
+    ////////////////////////////////// Score////////////////////////////////
+    private int p1Score;
+    private int p2Score;
+    ////////////////////////////////// Score////////////////////////////////
+
     public GamePanel() {
         random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -54,6 +59,8 @@ public class GamePanel extends JPanel implements ActionListener {
         ballHorizontalDirection = UNIT_SIZE; // Inital Speed
 
         resetPaddles(); // Move Paddles to center
+        p1Score = 0;
+        p2Score = 0;
     }
 
     public void resetPaddles() {
