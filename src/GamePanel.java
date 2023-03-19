@@ -16,9 +16,9 @@ public class GamePanel extends JPanel implements ActionListener {
     private boolean running;
 
     /////////////////////////////////////// paddles/////////////////////////////////////////
-    private final int leftBarY[] = new int[GAME_UNITS]; // Left paddle
-    private final int rightBarY[] = new int[GAME_UNITS]; // Right paddle
-    private static final int PADDLE_HEIGHT = 4; //(actually 5)
+    private int leftBarY[] = new int[GAME_UNITS]; // Left paddle
+    private int rightBarY[] = new int[GAME_UNITS]; // Right paddle
+    private static final int PADDLE_HEIGHT = 4; // (actually 5)
     private char direction;
     /////////////////////////////////////// paddles/////////////////////////////////////////
 
@@ -92,12 +92,23 @@ public class GamePanel extends JPanel implements ActionListener {
 
             ///////////////////////////// Ball//////////////////////////////////////
             g.fillOval(ballX, ballY, BALL_SIZE, BALL_SIZE); /// Draw ball
-
+            
+            ////////////////////////////// Score///////////////////////////////////
+            g.setFont(new Font("TimesRoman", Font.BOLD, 30));
+            ///////////////////////// p1/////////////////////
+            FontMetrics metrics = getFontMetrics(g.getFont());
+            g.drawString(String.valueOf(p1Score), (SCREEN_WIDTH - metrics.stringWidth(String.valueOf(p1Score) + UNIT_SIZE)) / 2,
+                    g.getFont().getSize());
+            ///////////////////////// p1//////////////////////
+            ////////////////////////  p2//////////////////////
+            g.drawString(String.valueOf(p2Score), (SCREEN_WIDTH - metrics.stringWidth(String.valueOf(p2Score)) - UNIT_SIZE) / 2,
+                    g.getFont().getSize());
+            ////////////////////////  p2//////////////////////
         }
     }
 
     public void newBall() {
-        ballHorizontalDirection = 0; // UNIT SIZE
+        ballHorizontalDirection = UNIT_SIZE; // Initial Speed
         ballDiagnolDirection = 0;
 
         ballX = SCREEN_WIDTH / 2 - BALL_SIZE / 2; // Start in middle (and the ball in the middle)
@@ -108,16 +119,17 @@ public class GamePanel extends JPanel implements ActionListener {
 
         switch (direction) {
             case 'U':
-                if (paddle[PADDLE_HEIGHT] > 0) { // If going up draw from top of the arrat downwards
-                    for (int i = 0; i < PADDLE_HEIGHT; i++) {
+                if (paddle[PADDLE_HEIGHT] > 0) {
+                    for (int i = 0; i < PADDLE_HEIGHT; i++) { // If going up draw from the top of the paddle upwards
                         paddle[i] = paddle[i + 1];
                     }
                 }
                 paddle[PADDLE_HEIGHT] = keepInRange(paddle[PADDLE_HEIGHT] - UNIT_SIZE); // Change last value
                 break;
             case 'D':
-                if (paddle[0] < SCREEN_HEIGHT - UNIT_SIZE) { // Unit size?
-                    for (int i = PADDLE_HEIGHT; i > 0; i--) { // if going down draw from
+                if (paddle[0] < SCREEN_HEIGHT - UNIT_SIZE) { // if paddle is extending past the unit size form the
+                                                             // bottom
+                    for (int i = PADDLE_HEIGHT; i > 0; i--) { // if going down draw from the bottom downwards
                         paddle[i] = paddle[i - 1];
                     }
                 }
@@ -133,26 +145,27 @@ public class GamePanel extends JPanel implements ActionListener {
         else if (y < 0) // If y value is passing top of screen return top of screen
             return 0;
         else
-            return y; // Otherwise its a valid y 
+            return y; // Otherwise its a valid y
     }
 
     public void moveBall() {
         switch (ballDirection) {
             case 'L':
-                ballX = keepBallXInRange(ballX - ballHorizontalDirection);
+                ballX = (ballX - ballHorizontalDirection);
                 ballY += ballDiagnolDirection;
                 break;
             case 'R':
-                ballX = keepBallXInRange(ballX + ballHorizontalDirection);
+                ballX = (ballX + ballHorizontalDirection);
                 ballY += ballDiagnolDirection;
                 break;
         }
     }
 
     public int keepBallXInRange(int x) {
-        if (x <= UNIT_SIZE)
-            return 0; // Left wall
-        // right wall not working
+        if (x < 0)
+            return -1; // Left wall
+        else if (x > SCREEN_WIDTH)
+            return SCREEN_WIDTH + 1; // right wall not working
         else
             return x;
     }
@@ -163,52 +176,56 @@ public class GamePanel extends JPanel implements ActionListener {
         int angle = random.nextInt(6) + 1;
         angle = BALL_SIZE / angle;
         // Decide if its positive or negative
-        if ((int) random.nextInt(2) + 1 == 1) {
+        if (random.nextInt(2) + 1 == 1) {
             ballDiagnolDirection -= angle;
         } else {
             ballDiagnolDirection += angle;
         }
 
-        // Change ball speed
-        ballHorizontalDirection += 10;
+        // Increase ball speed
+        ballHorizontalDirection += 2;
     }
 
     public void checkCollision() {
-
+        boolean paddleHit = false;
         // Case 5 hits leftPaddle
-        if (ballX <= UNIT_SIZE) {
+        if (ballX < UNIT_SIZE) {
             for (int i = 0; i <= PADDLE_HEIGHT; i++) {
-                if (leftBarY[i] == ballY) {
+                if (leftBarY[i] <= ballY && ballY >= leftBarY[PADDLE_HEIGHT]) {
                     ballDirection = 'R';
                     changeBallSign();
+                    paddleHit = true;
                 }
             }
         }
 
         // Case 6 hits rightPaddle
-        if (ballX >= SCREEN_WIDTH - UNIT_SIZE) {
+        if (ballX > SCREEN_WIDTH - UNIT_SIZE) {
             for (int i = 0; i <= PADDLE_HEIGHT; i++) {
-                if (rightBarY[i] == ballY) {
+                if (rightBarY[i] <= ballY && ballY >= rightBarY[PADDLE_HEIGHT]) {
                     ballDirection = 'L';
                     changeBallSign();
+                    paddleHit = true;
                 }
             }
 
         }
 
-        // Case 1 hits left wall
-        if (ballX <= 0) {
-            ballHorizontalDirection = 0;
-            resetPaddles();
-            timeSleep(2);
-            newBall();
-        }
-        // Case 2 hits right wall
-        if (ballX >= SCREEN_WIDTH) {
-            ballHorizontalDirection = 0;
-            resetPaddles();
-            timeSleep(2);
-            newBall();
+        if (!paddleHit) {
+            // Case 1 hits left wall
+            if (ballX <= 0) {
+                ballHorizontalDirection = 0;
+                resetPaddles();
+                timeSleep(2);
+                newBall();
+            }
+            // Case 2 hits right wall
+            if (ballX >= SCREEN_WIDTH) {
+                ballHorizontalDirection = 0;
+                resetPaddles();
+                timeSleep(2);
+                newBall();
+            }
         }
 
         // Case 3 hits ceiling
@@ -235,7 +252,7 @@ public class GamePanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (running) {
             checkCollision();
-            // moveBall();
+            moveBall();
         }
         repaint();
     }
@@ -261,7 +278,7 @@ public class GamePanel extends JPanel implements ActionListener {
                     move(rightBarY);
                     break;
             }
-            repaint();
+            //repaint();
         }
     }
 
