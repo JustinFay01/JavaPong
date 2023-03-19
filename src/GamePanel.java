@@ -13,26 +13,26 @@ public class GamePanel extends JPanel implements ActionListener {
     private static final int UNIT_SIZE = 25;
     private static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / UNIT_SIZE;
     private static final int DELAY = 75;
-
-    private static final int PADDLE_HEIGHT = 5;
-    private static final int BALL_SIZE = 15;
-
-    private final int leftBarY[] = new int[GAME_UNITS]; // Left paddle
-
-    private final int rightBarY[] = new int[GAME_UNITS]; // Right paddle
-
     private boolean running;
+
+    /////////////////////////////////////// paddles/////////////////////////////////////////
+    private final int leftBarY[] = new int[GAME_UNITS]; // Left paddle
+    private final int rightBarY[] = new int[GAME_UNITS]; // Right paddle
+    private static final int PADDLE_HEIGHT = 5;
+    private char direction;
+    /////////////////////////////////////// paddles/////////////////////////////////////////
 
     private Random random;
     private Timer timer;
 
-    private char direction; // Starting Position to move paddles to center
-
+    ////////////////////////////////// Ball//////////////////////////////////
+    private static final int BALL_SIZE = 15;
     private int ballX;
     private int ballY;
     private char ballDirection;
     private int ballDiagnolDirection = 0;
     private int ballHorizontalDirection = UNIT_SIZE;
+    ////////////////////////////////// Ball//////////////////////////////////
 
     public GamePanel() {
         random = new Random();
@@ -49,19 +49,19 @@ public class GamePanel extends JPanel implements ActionListener {
         timer.start();
 
         newBall();
-        ballDirection = 'L';
-        ballDiagnolDirection = 0;
-        ballHorizontalDirection = UNIT_SIZE;
+        ballDirection = 'L'; // Start Ball direction
+        ballDiagnolDirection = 0; // No inital diagnol
+        ballHorizontalDirection = UNIT_SIZE; // Inital Speed
 
-        resetPaddles();
+        resetPaddles(); // Move Paddles to center
     }
 
     public void resetPaddles() {
-        //Set paddles to top of screen
-        Arrays.fill(leftBarY, 0); 
+        // Set paddles to top of screen
+        Arrays.fill(leftBarY, 0); // Set vals to 0
         Arrays.fill(rightBarY, 0);
 
-        direction = 'D';
+        direction = 'D'; // Make sure they move down and not up
 
         // Start with paddles in the middle of the screen
         for (int i = 0; i < (int) ((SCREEN_HEIGHT / UNIT_SIZE) / 1.5); i++) {
@@ -91,49 +91,49 @@ public class GamePanel extends JPanel implements ActionListener {
             }
 
             ///////////////////////////// Ball//////////////////////////////////////
-            g.fillOval(ballX, ballY, BALL_SIZE, BALL_SIZE);
+            g.fillOval(ballX, ballY, BALL_SIZE, BALL_SIZE); /// Draw ball
 
         }
     }
 
     public void newBall() {
-        ballHorizontalDirection = 0; //UNIT SIZE
+        ballHorizontalDirection = 0; // UNIT SIZE
         ballDiagnolDirection = 0;
 
-        ballX = SCREEN_WIDTH / 2 - BALL_SIZE / 2;
-        ballY = SCREEN_HEIGHT / 2;
+        ballX = SCREEN_WIDTH / 2 - BALL_SIZE / 2; // Start in middle (and the ball in the middle)
+        ballY = SCREEN_HEIGHT / 2; // Middle of screen
     }
 
     public void move(int[] paddle) {
 
         switch (direction) {
             case 'U':
-                if (paddle[PADDLE_HEIGHT] > 0) {
+                if (paddle[PADDLE_HEIGHT] > 0) { // If going up draw from top of the arrat downwards
                     for (int i = 0; i < PADDLE_HEIGHT; i++) {
                         paddle[i] = paddle[i + 1];
                     }
                 }
-                paddle[PADDLE_HEIGHT] = keepInRange(paddle[PADDLE_HEIGHT] - UNIT_SIZE);
+                paddle[PADDLE_HEIGHT] = keepInRange(paddle[PADDLE_HEIGHT] - UNIT_SIZE); // Change last value
                 break;
             case 'D':
-                if (paddle[0] < SCREEN_HEIGHT - UNIT_SIZE) {
-                    for (int i = PADDLE_HEIGHT; i > 0; i--) {
+                if (paddle[0] < SCREEN_HEIGHT - UNIT_SIZE) { // Unit size?
+                    for (int i = PADDLE_HEIGHT; i > 0; i--) { // if going down draw from
                         paddle[i] = paddle[i - 1];
                     }
                 }
-                paddle[0] = keepInRange(paddle[0] + UNIT_SIZE);
+                paddle[0] = keepInRange(paddle[0] + UNIT_SIZE); // Keep the paddle in range
                 break;
         }
 
     }
 
     public int keepInRange(int y) {
-        if (y >= SCREEN_HEIGHT - UNIT_SIZE)
-            return SCREEN_HEIGHT;
-        else if (y <= 0)
+        if (y > SCREEN_HEIGHT - UNIT_SIZE) // if y value is passing the bottom of the screen return the screen height
+            return SCREEN_HEIGHT - UNIT_SIZE;
+        else if (y < 0) // If y value is passing top of screen return top of screen
             return 0;
         else
-            return y;
+            return y; // Otherwise its a valid y 
     }
 
     public void moveBall() {
@@ -235,7 +235,7 @@ public class GamePanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (running) {
             checkCollision();
-            //moveBall();
+            // moveBall();
         }
         repaint();
     }
