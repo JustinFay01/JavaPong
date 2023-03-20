@@ -16,8 +16,8 @@ public class GamePanel extends JPanel implements ActionListener {
     private boolean running;
 
     /////////////////////////////////////// paddles/////////////////////////////////////////
-    private int leftBarY[] = new int[GAME_UNITS]; // Left paddle
-    private int rightBarY[] = new int[GAME_UNITS]; // Right paddle
+    private int leftBarY[] = new int[PADDLE_HEIGHT+1]; // Left paddle
+    private int rightBarY[] = new int[PADDLE_HEIGHT+1]; // Right paddle
     private static final int PADDLE_HEIGHT = 4; // (actually 5)
     private char direction;
     /////////////////////////////////////// paddles/////////////////////////////////////////
@@ -88,7 +88,7 @@ public class GamePanel extends JPanel implements ActionListener {
             g.drawLine(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT); // Draw Midde Line
 
             /////////////////////////////// Paddle//////////////////////////////////
-            g.setColor(Color.white);
+            g.setColor(Color.GREEN);
             for (int i = 0; i <= PADDLE_HEIGHT; i++) { /// Draw Left Paddle
                 g.fillRect(0, leftBarY[i], UNIT_SIZE, UNIT_SIZE);
             }
@@ -188,7 +188,7 @@ public class GamePanel extends JPanel implements ActionListener {
         // Case 5 hits leftPaddle
         if (ballX < UNIT_SIZE) {
             for (int i = 0; i <= PADDLE_HEIGHT; i++) {
-                if (leftBarY[i] <= ballY && ballY >= leftBarY[PADDLE_HEIGHT]) {
+                if (ballY <= leftBarY[i] && ballY >= leftBarY[PADDLE_HEIGHT]) {
                     ballDirection = 'R';
                     changeBallSign();
                     paddleHit = true;
@@ -199,7 +199,7 @@ public class GamePanel extends JPanel implements ActionListener {
         // Case 6 hits rightPaddle
         if (ballX > SCREEN_WIDTH - UNIT_SIZE) {
             for (int i = 0; i <= PADDLE_HEIGHT; i++) {
-                if (rightBarY[i] <= ballY && ballY >= rightBarY[PADDLE_HEIGHT]) {
+                if (ballY <= rightBarY[i] && ballY >= rightBarY[PADDLE_HEIGHT]) {
                     ballDirection = 'L';
                     changeBallSign();
                     paddleHit = true;
